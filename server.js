@@ -8,7 +8,7 @@ mongoose.Promise = global.Promise;
 //mongoose.set('debug', true);
 
 // remplacer toute cette chaine par l'URI de connexion à votre propre base dans le cloud s
-const uri = 'mongodb+srv://Juannito:Juannito942!>@cluster0.yimno.mongodb.net/assignments?retryWrites=true&w=majority';
+const uri = 'mongodb+srv://Juannito:Juannito942!@cluster0.yimno.mongodb.net/assignments?retryWrites=true&w=majority';
 
 const options = {
   useNewUrlParser: true,
