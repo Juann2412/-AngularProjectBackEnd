@@ -1,7 +1,8 @@
 let Assignment = require('../model/assignment');
 
 // Récupérer tous les assignments (GET)
-function getAssignments(req, res){
+
+/*function getAssignments(req, res){
     Assignment.find((err, assignments) => {
         if(err){
             res.send(err)
@@ -10,8 +11,54 @@ function getAssignments(req, res){
         res.send(assignments);
     });
 }
+*/
+
+function getAssignments(req, res){
+
+    Assignment.aggregate([
+        {
+            $lookup : {
+                from : 'matieres',
+                localField : 'matiere',
+                foreignField : 'id',
+                as : 'matieres'
+            }
+        },{
+            $unwind: "$matieres",
+          },]).then( (result) =>{
+        res.send(result)
+    })
+}
+
 
 // Récupérer un assignment par son id (GET)
+
+function getAssignment(req, res){
+    var assignmentId = req.params.id;
+    Assignment.aggregate([   
+        {
+            $lookup : {
+                from : 'matieres',
+                localField : 'matiere',
+                foreignField : 'id',
+                as : 'matieres'
+            }
+        },
+        {
+            $unwind: "$matieres",
+        },    
+        {
+            $match : { id: +assignmentId}
+        },
+        {
+            $limit : 1
+        }          
+   ]).then((result) =>{
+       res.send(Object.values(result)[0])
+    })
+}
+  
+ /*
 function getAssignment(req, res){
     let assignmentId = req.params.id;
 
@@ -20,7 +67,7 @@ function getAssignment(req, res){
         res.json(assignment);
     })
 }
-
+ */
 // Ajout d'un assignment (POST)
 function postAssignment(req, res){
     let assignment = new Assignment();
