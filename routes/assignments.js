@@ -12,7 +12,7 @@ let Assignment = require('../model/assignment');
     });
 }
 */
-
+/*
 function getAssignments(req, res){
 
     Assignment.aggregate([
@@ -27,6 +27,32 @@ function getAssignments(req, res){
             $unwind: "$matieres",
           },]).then( (result) =>{
         res.send(result)
+    })
+}
+*/
+function getAssignments(req, res){
+
+    var aggregateQuery = Assignment.aggregate([
+        {
+            $lookup : {
+                from : 'matieres',
+                localField : 'matiere',
+                foreignField : 'id',
+                as : 'matieres'
+            }
+        },{
+            $unwind: "$matieres",
+          },]);
+    Assignment.aggregatePaginate(aggregateQuery,
+    {
+        page: parseInt(req.query.page) || 1,
+        limit: parseInt(req.query.limit) || 10,
+    },
+    (err,assignments)=> {
+        if (err) {
+            res.send(err);
+          }
+          res.send(assignments);
     })
 }
 
@@ -75,6 +101,9 @@ function postAssignment(req, res){
     assignment.nom = req.body.nom;
     assignment.dateDeRendu = req.body.dateDeRendu;
     assignment.rendu = req.body.rendu;
+    assignment.matiere = req.body.matiere;
+    assignment.eleve = req.body.eleve;
+    assignment.remarque = req.body.remarque;
 
     console.log("POST assignment reçu :");
     console.log(assignment)
