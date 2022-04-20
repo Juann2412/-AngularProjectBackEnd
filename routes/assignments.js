@@ -31,7 +31,8 @@ function getAssignments(req, res){
 }
 */
 function getAssignments(req, res){
-
+    var isRendu = (req.query.rendu === 'true');
+    console.log("rendu:"+typeof(isRendu))
     var aggregateQuery = Assignment.aggregate([
         {
             $lookup : {
@@ -42,7 +43,10 @@ function getAssignments(req, res){
             }
         },{
             $unwind: "$matieres",
-          },]);
+          },{
+            $match : { rendu: isRendu}
+        }
+        ]);
     Assignment.aggregatePaginate(aggregateQuery,
     {
         page: parseInt(req.query.page) || 1,
