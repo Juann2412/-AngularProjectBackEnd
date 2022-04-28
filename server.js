@@ -65,7 +65,10 @@ app.route(prefix + '/matiere')
   //login
 app.route(prefix+'/login')
   .post(user.login);
-   
+
+  //register
+  app.route(prefix + '/register')
+  .post(user.register)
 // On démarre le serveur
 app.listen(port, "0.0.0.0");
 console.log('Serveur démarré sur http://localhost:' + port);

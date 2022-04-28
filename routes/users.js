@@ -18,4 +18,20 @@ function login(req,res){
     })
 }
 
-module.exports = { login};
+function register(req,res){
+     var hashedPassword = bcrypt.hashSync(req.body.password, 8);
+    User.create({
+        email : req.body.email,
+        password : hashedPassword,
+        isAdmin : "false"
+        },function (err, user) {
+        if (err) return res.status(500).send("There was a problem registering the user.")
+        // create a token
+        var token = jwt.sign({ id: user._id }, 'supersecret', {
+          expiresIn: 86400 // expires in 24 hours
+        });
+        res.status(200).send({ auth: true, token: token , user : user});
+      });       
+}
+
+module.exports = { login,register};
