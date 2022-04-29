@@ -67,8 +67,12 @@ app.route(prefix+'/login')
   .post(user.login);
 
   //register
-  app.route(prefix + '/register')
+app.route(prefix + '/register')
   .post(user.register)
+
+app.route(prefix + '/validate')
+  .post(user.verifyToken)
+  
 // On démarre le serveur
 app.listen(port, "0.0.0.0");
 console.log('Serveur démarré sur http://localhost:' + port);
